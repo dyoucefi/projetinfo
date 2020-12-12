@@ -10,41 +10,42 @@ Created on Sat Dec  5 16:32:15 2020
 import geopandas as gpd
 import pandas as pd
 
-gdf = gpd.read_file('/Users/dalilyoucefi/Downloads/arrondissements.geojson')
+gdf = gpd.read_file('/Users/dalilyoucefi/Downloads/arrondissements.geojson').sort_values(by="c_ar").reset_index()
 gdf2=gpd.read_file('/Users/dalilyoucefi/Downloads/quartier_paris.geojson')
 
 
 gdf.head()
 
 
-df_Tier=pd.read_csv("/Users/dalilyoucefi/Desktop/TierBase9HLu.csv")
+df_Tier=pd.read_csv("/Users/dalilyoucefi/Desktop/TierBase9HSa.csv")
+
 
 import geopandas
 
 
 
-gdf_Tier = geopandas.GeoDataFrame(df_Tier, geometry=geopandas.points_from_xy(df_Tier.Lng, df_Tier.Lat))
+clc = geopandas.GeoDataFrame(df_Tier, geometry=geopandas.points_from_xy(clc.Lng, clc.Lat))
 
 gdf_Tier["geometry"][0].within(gdf["geometry"][19])
 gdf_Tier["Arrondissement"]= 0
 gdf_Tier["densité"]=0
-gdf_Tier["quartier"]=0
+gdf_Tier["nomquartier"]=0
+gdf_Tier["id_quartier"]=0
 
 def arrondissementappartenance(point):
     for i in range(20):
         if point.within(gdf["geometry"][i]):
             return int(i+1)
-def densitearr(point):
-    li=[9863,21872,29638,17838,24817,21062,13936,10147,26888,323888,41341,8686,24896,23684,27201,9714,29166,31701,27274,32494]
-    for i in range(20):
-        if point.within(gdf["geometry"][i]):
-            return(li[i])
-def quartierappartenance(point):
+
+
+def quartierappartenance2(point):
     for i in range(80):
         if point.within(gdf2["geometry"][i]):
-            return gdf2["l_qu"][i]
-gdf_Tier["Arrondissement"]= gdf_Tier["geometry"].apply(arrondissementappartenance)
-gdf_Tier["densité"]=gdf_Tier["geometry"].apply(densitearr)
-gdf_Tier["quartier"]=gdf_Tier["geometry"].apply(quartierappartenance)
+            return gdf2["c_qu"][i]
+clc["Arrondissement"]= clc["geometry"].apply(arrondissementappartenance)
 
-gdf_Tier.to_file("/Users/dalilyoucefi/Desktop/GeoTier9HLu.shp")
+
+clc["id_quartier"]=clc["geometry"].apply(quartierappartenance2)
+
+
+ 
